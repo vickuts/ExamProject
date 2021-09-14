@@ -1,0 +1,19 @@
+Title: Check Forgotten Password link
+
+Steps:
+1. Open https://account.next.ua/en/Login page
+2. Enter "auto@test.com" to 'Email Address' input field
+3. Click on 'Forgotten Password' link
+4. Click on 'edit' link
+
+Expected results:
+3. Modal window is displayed with:
+- 'FORGOTTEN YOUR PASSWORD?' header
+- 'An email will be sent to the email address below with instructions on how to reset your password.' body
+- 'Close' button
+- 'Reset' button
+- "auto@test.com" is inputted in 'EmailOrAccountNumber' field
+- 'edit' link
+4. 'edit' link is not displayed.
+"auto@test.com" is not displayed in 'EmailOrAccountNumber' field.
+'Email Address or Customer Number' placeholder is displayed in 'EmailOrAccountNumber' field.
