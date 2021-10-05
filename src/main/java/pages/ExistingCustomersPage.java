@@ -2,7 +2,6 @@ package pages;
 
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import ru.yandex.qatools.htmlelements.element.Button;
@@ -26,10 +25,10 @@ public class ExistingCustomersPage extends ParentPage {
     public ExistingCustomersPage openExistingCustomersPage() {
         try {
             webDriver.get(BASE_URL.replace("www","account") + getRelativeUrl());
-            logger.info("Login page was opened");
+            logger.info("Existing customers page was opened");
         }catch (Exception e){
-            logger.error("Can not work with LoginPage" + e);
-            Assert.fail("Can not work with LoginPage");
+            logger.error("Can not work with Existing customers page" + e);
+            Assert.fail("Can not work with Existing customers page");
         }
         return this;
     }

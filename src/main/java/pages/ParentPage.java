@@ -15,6 +15,8 @@ import ru.yandex.qatools.htmlelements.element.TypifiedElement;
 import ru.yandex.qatools.htmlelements.loader.decorator.HtmlElementDecorator;
 import ru.yandex.qatools.htmlelements.loader.decorator.HtmlElementLocatorFactory;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.CoreMatchers.containsString;
 
 public abstract class ParentPage {
@@ -22,6 +24,7 @@ public abstract class ParentPage {
     WebDriver webDriver;
     WebDriverWait webDriverWait10, webDriverWait15, webDriverWait30;
     String value;
+    ArrayList<String> tabs = new ArrayList<>();
     public static ConfigProperties configProperties =
             ConfigFactory.create(ConfigProperties.class);
     protected final String BASE_URL = configProperties.base_url();
@@ -42,6 +45,13 @@ public abstract class ParentPage {
     protected void checkUrl() {
         Assert.assertEquals("Invalid page ",
                 BASE_URL + getRelativeUrl(),
+                webDriver.getCurrentUrl()
+        );
+    }
+
+    protected void checkUrlViaFilter() {
+        Assert.assertEquals("Invalid page ",
+                BASE_URL + getRelativeUrl() + "-isort-score",
                 webDriver.getCurrentUrl()
         );
     }
@@ -84,7 +94,6 @@ public abstract class ParentPage {
 
     protected void clickOnElement(WebElement webElement) {
         try {
-//            webDriverWait10.until(ExpectedConditions.elementToBeClickable(webElement));
             webElement.click();
             logger.info(getElementName(webElement) + " was clicked");
         } catch (Exception e) {
@@ -98,6 +107,16 @@ public abstract class ParentPage {
             webElement.click();
             logger.info(getElementName(webElement) + " was clicked");
         } catch (Exception e) {
+            writeErrorAndStopTest(e);
+        }
+    }
+
+    protected void clickOnElement(WebElement webElement, String elementName){
+        try {
+            webDriverWait10.until(ExpectedConditions.elementToBeClickable(webElement));
+            webElement.click();
+            logger.info(elementName + " Element was clicked");
+        }catch (Exception e){
             writeErrorAndStopTest(e);
         }
     }
@@ -132,6 +151,24 @@ public abstract class ParentPage {
         }
     }
 
+    public boolean isPlaceholderDisplayed(WebElement webElement, String text) {
+        try {
+            boolean state;
+            String placeholder = webElement.getAttribute("placeholder");
+            if (placeholder.equalsIgnoreCase(text)){
+                state = true;
+                logger.info("'" + text + "' placeholder is displayed in " + getElementName(webElement));
+            } else {
+                logger.info("'" + text + "' placeholder is not displayed in " + getElementName(webElement));
+                state = false;
+            }
+            return state;
+        } catch (Exception e) {
+            logger.info("'" + text + "' placeholder is displayed in " + getElementName(webElement));
+            return false;
+        }
+    }
+
     protected boolean isElementPresent(WebElement webElement) {
         try {
             boolean state = webElement.isDisplayed();
@@ -159,7 +196,6 @@ public abstract class ParentPage {
 
     protected void setCheckBoxValue(WebElement checkBox, String value) {
         try {
-//            webDriverWait30.until(ExpectedConditions.elementToBeClickable(checkBox));
             switch (value.toLowerCase()) {
                 case "check":
                     if (checkBox.isSelected()) {
@@ -187,25 +223,40 @@ public abstract class ParentPage {
         }
     }
 
-    private void writeErrorAndStopTest(Exception e) {
+    public void writeErrorAndStopTest(Exception e) {
         logger.error("Can not work with element" + e);
         Assert.fail("Can not work with element" + e);
     }
 
-//    public void userOpensNewTab() {
-//        ((JavascriptExecutor)webDriver).executeScript("window.open()");
-//        ArrayList<String> tabs = new ArrayList<> (webDriver.getWindowHandles());
-//        webDriver.switchTo().window(tabs.get(1));
-//    }
+    public void getAllOpenedTabs() {
+        tabs.addAll(webDriver.getWindowHandles());
+    }
+
+    public void switchToTabByNumber(int windowNumber) {
+        try {
+            getAllOpenedTabs();
+            webDriver.switchTo().window(tabs.get(windowNumber));
+            logger.info("Tab with URL " + BASE_URL + getRelativeUrl() + " is opened");
+        } catch (Exception e) {
+            writeErrorAndStopTest(e);
+        }
+    }
+
+    public void closeActiveTabAndSwitchToTabByNumber(int windowNumber) {
+        try {
+            webDriver.close();
+            switchToTabByNumber(windowNumber);
+        } catch (Exception e) {
+            writeErrorAndStopTest(e);
+        }
+    }
 
     public void clickOnElementUsingJavascript(WebElement webElement) {
         JavascriptExecutor executor = (JavascriptExecutor)webDriver;
         executor.executeScript("arguments[0].click();", webElement);
     }
-//    WebElement element = driver.findElement(By.id("gbqfd"));
-//    JavascriptExecutor executor = (JavascriptExecutor)driver;
-//    executor.executeScript("arguments[0].click();", element);
 
-//    JavascriptExecutor jse = (JavascriptExecutor)driver;
-//    jse.executeScript("document.getElementById('gbqfb').click();");
+    public void scrollToElement(WebElement webElement) {
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+    }
 }

@@ -37,8 +37,36 @@ public class LoginTest extends BaseTest {
                 .clickOnLinkForgottenPassword()
             .checkWindowModal(VALID_EMAIL)
                 .clickOnLinkEdit()
-//            .checkIsEmailAddressOrCustomerNumberFieldEmpty()
-//            .checkPlaceholderForEmailAddressOrCustomerNumberField()
-        ;
+            .checkIsEmailAddressOrCustomerNumberFieldEmpty()
+            .checkPlaceholderForEmailAddressOrCustomerNumberField()
+                .enterEmailInSignIn(VALID_EMAIL)
+                .clickOnButtonReset()
+            .checkIsResetAlertDisplayed();
+    }
+
+    @Test
+    public void socialNetworks(){
+        loginPage
+                .openLoginPage()
+                .clickOnFacebookLabel()
+        .checkIsTabFacebookOpened()
+        .checkIsRedirectionOnFacebookPage()
+                .closeOpenedTab()
+                .clickOnTwitterLabel()
+        .checkIsTabTwitterOpened()
+        .checkIsRedirectionOnTwitterPage()
+                .closeOpenedTab()
+                .clickOnInstagramLabel()
+        .checkIsTabInstagramOpened()
+        .checkIsRedirectionOnInstagramPage()
+                .closeOpenedTab()
+                .clickOnPinterestLabel()
+        .checkIsTabPinterestOpened()
+        .checkIsRedirectionOnPinterestPage()
+                .closeOpenedTab()
+                .clickOnYoutubeLabel()
+        .checkIsTabYoutubeOpened()
+        .checkIsRedirectionOnYoutubePage()
+                .closeOpenedTab();
     }
 }

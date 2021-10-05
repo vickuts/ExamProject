@@ -10,10 +10,7 @@ import org.junit.rules.TestName;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import pages.AccountPage;
-import pages.HomePage;
-import pages.LoginPage;
-import pages.RegistrationPage;
+import pages.*;
 
 import java.util.concurrent.TimeUnit;
 

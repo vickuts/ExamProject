@@ -1,10 +1,7 @@
 package pages;
 
-import netscape.security.ForbiddenTargetException;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import ru.yandex.qatools.htmlelements.element.*;
 
@@ -32,7 +29,21 @@ public class LoginPage extends ParentPage {
     @FindBy(xpath = ".//*[text()='Close']")
     private Button buttonClose;
     @FindBy(xpath = ".//form[contains(@action,'ForgottenPassword')]//a")
-    private WebElement linkEdit;
+    private Link linkEdit;
+    @FindBy(xpath = ".//*[text()='If you have an account with us, you will shortly receive an email explaining how to reset your password.']")
+    private TextBlock alertReset;
+    @FindBy(xpath = ".//h3[text()='Our Social Networks']")
+    private TextBlock titleOurSocialNetworks;
+    @FindBy(xpath = ".//*[@aria-label='facebook']")
+    private Image labelFacebook;
+    @FindBy(xpath = ".//*[@aria-label='twitter']")
+    private Image labelTwitter;
+    @FindBy(xpath = ".//*[@aria-label='instagram']")
+    private Image labelInstagram;
+    @FindBy(xpath = ".//*[@aria-label='pinterest']")
+    private Image labelPinterest;
+    @FindBy(xpath = ".//*[@aria-label='youtube']")
+    private Image labelYoutube;
 
     public LoginPage(WebDriver webDriver) {
         super(webDriver);
@@ -48,8 +59,8 @@ public class LoginPage extends ParentPage {
             webDriver.get(BASE_URL.replace("www","account") + getRelativeUrl());
             logger.info("Login page was opened");
         }catch (Exception e){
-            logger.error("Can not work with LoginPage" + e);
-            Assert.fail("Can not work with LoginPage");
+            logger.error("Can not work with Login page" + e);
+            Assert.fail("Can not work with Login page");
         }
         return this;
     }
@@ -119,6 +130,7 @@ public class LoginPage extends ParentPage {
     }
 
     private boolean isLinkEditPresent() {
+        webDriver.switchTo().frame("iFrameModalWindow");
         return isElementPresent(linkEdit);
     }
 
@@ -142,9 +154,54 @@ public class LoginPage extends ParentPage {
         return this;
     }
 
-
     public LoginPage checkIsEmailAddressOrCustomerNumberFieldEmpty() {
         isWebElementFieldEmpty(inputEmail);
         return this;
+    }
+
+    public LoginPage checkPlaceholderForEmailAddressOrCustomerNumberField() {
+        isPlaceholderDisplayed(inputEmail, "Email Address or Customer Number");
+        return this;
+    }
+
+    public LoginPage clickOnButtonReset() {
+        clickOnElement(buttonReset);
+        return this;
+    }
+
+    public LoginPage checkIsResetAlertDisplayed() {
+        isElementPresent(alertReset);
+        return this;
+    }
+
+    public LoginPage closeOpenedTab(){
+        closeActiveTabAndSwitchToTabByNumber(0);
+        return this;
+    }
+
+    public FacebookPage clickOnFacebookLabel() {
+        scrollToElement(titleOurSocialNetworks);
+        clickOnElement(labelFacebook);
+        return new FacebookPage(webDriver);
+    }
+
+    public TwitterPage clickOnTwitterLabel() {
+        clickOnElement(labelTwitter);
+        return new TwitterPage(webDriver);
+    }
+
+    public InstagramPage clickOnInstagramLabel() {
+        clickOnElement(labelInstagram);
+        return new InstagramPage(webDriver);
+    }
+
+    public PinterestPage clickOnPinterestLabel() {
+        clickOnElement(labelPinterest);
+        return new PinterestPage(webDriver);
+    }
+
+    public YoutubePage clickOnYoutubeLabel() {
+        clickOnElement(labelYoutube);
+        return new YoutubePage(webDriver);
     }
 }

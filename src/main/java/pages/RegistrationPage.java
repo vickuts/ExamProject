@@ -56,8 +56,16 @@ public class RegistrationPage extends ParentPage{
     private CheckBox checkboxSaleEmails;
     @FindBy(id = "ChkBySms")
     private CheckBox checkboxSMS;
-//    @FindBy(xpath = ".//span[contains(text(), 'This email is already in use. Please sign in to use your existing Next Account.')]")
-//    private TextBlock alertExistingCustomer;
+    @FindBy(className = "int-one-page-footer")
+    private TextBlock footer;
+    @FindBy(linkText = "Privacy and Cookie Policy")
+    private Link linkPrivacyAndCookiePolicy;
+    @FindBy(xpath = ".//*[text()='Back']")
+    private Button buttonBack;
+    @FindBy(linkText = "Terms and Conditions")
+    private Link linkTermsAndConditions;
+    @FindBy(linkText = "Cookies & Privacy Policy")
+    private Link linkCookiesAndPrivacyPolicy;
 
     public RegistrationPage(WebDriver webDriver) {
         super(webDriver);
@@ -71,10 +79,10 @@ public class RegistrationPage extends ParentPage{
     public RegistrationPage openRegistrationPage() {
         try {
             webDriver.get(BASE_URL.replace("www","account") + getRelativeUrl());
-            logger.info("Login page was opened");
+            logger.info("Registration page was opened");
         }catch (Exception e){
-            logger.error("Can not work with LoginPage" + e);
-            Assert.fail("Can not work with LoginPage");
+            logger.error("Can not work with Registration page" + e);
+            Assert.fail("Can not work with Registration page");
         }
         return this;
     }
@@ -263,7 +271,6 @@ public class RegistrationPage extends ParentPage{
     }
 
     public RegistrationPage setCheckboxEmail(String value) {
-//        new Actions(webDriver).moveToElement(checkboxEmail).perform();
         JavascriptExecutor jse = (JavascriptExecutor)webDriver;
         jse.executeScript("document.getElementById('ChkByEmail').focus();");
         setCheckBoxValue(checkboxEmail, value);
@@ -280,13 +287,38 @@ public class RegistrationPage extends ParentPage{
         return this;
     }
 
-//    public boolean isAlertExistingCustomerDisplayed(){
-//        return isElementPresent(alertExistingCustomer);
-//    }
-
     public ExistingCustomersPage registrationWithExistingEmail(String email) {
         enterEmailInRegistration(email);
         clickOnFieldPasswordInRegistration();
         return new ExistingCustomersPage(webDriver);
+    }
+
+    public RegistrationPage scrollToFooter() {
+        scrollToElement(footer);
+        return this;
+    }
+
+    public PrivacyPolicyPage clickOnLinkPrivacyAndCookiePolicy() {
+        scrollToFooter();
+        clickOnElement(linkPrivacyAndCookiePolicy);
+        return new PrivacyPolicyPage(webDriver);
+    }
+
+    public RegistrationPage clickOnBackButton() {
+        clickOnElement(buttonBack);
+        switchToTabByNumber(0);
+        return this;
+    }
+
+    public TermsPage clickOnLinkTermsAndConditions() {
+        scrollToFooter();
+        clickOnElement(linkTermsAndConditions);
+        return new TermsPage(webDriver);
+    }
+
+    public PrivacyPolicyPage clickOnLinkCookiesAndPrivacyPolicy() {
+        scrollToFooter();
+        clickOnElement(linkCookiesAndPrivacyPolicy);
+        return new PrivacyPolicyPage(webDriver);
     }
 }

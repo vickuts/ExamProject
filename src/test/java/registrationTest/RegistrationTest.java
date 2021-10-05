@@ -6,7 +6,6 @@ import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 @RunWith(JUnitParamsRunner.class)
 public class RegistrationTest extends BaseTest {
@@ -92,8 +91,8 @@ public class RegistrationTest extends BaseTest {
         loginPage
                 .openLoginPage()
                 .clickOnButtonRegisterNow()
-                .registrationWithInputtedData("Mrs", "newauto", "test", "newauto@test.com",
-                        "1q2w3e4r5t6y", "333333333", "5",
+                .registrationWithInputtedData("Mrs", "Test", "Testovi4", "test@testovi4.com",
+                        "1q2w3e4r5t6y", "123456780", "5",
                         "Jenkins, 8080", "Java", "IT", "77777",
                         "check", "uncheck", "check")
             .checkIsRedirectionOnAccountPage();
@@ -106,5 +105,23 @@ public class RegistrationTest extends BaseTest {
                 .clickOnButtonRegisterNow()
                 .registrationWithExistingEmail("auto@test.com")
             .checkIsRedirectionOnExistingCustomersPage();
+    }
+
+    @Test
+    public void regirectLinks() {
+        loginPage
+                .openLoginPage()
+                .clickOnButtonRegisterNow()
+                .clickOnLinkPrivacyAndCookiePolicy()
+            .checkIsTabPrivacyPolicyOpened()
+            .checkIsRedirectionOnPrivacyPolicyPage()
+                .clickOnBackButton()
+                .clickOnLinkTermsAndConditions()
+            .checkIsTabTermsOpened()
+            .checkIsRedirectionOnTermsPage()
+                .clickOnBackButton()
+                .clickOnLinkCookiesAndPrivacyPolicy()
+            .checkIsTabCookiesAndPrivacyPolicyOpened()
+            .checkIsRedirectionOnPrivacyPolicyPage();
     }
 }
